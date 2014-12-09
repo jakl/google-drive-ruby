@@ -9,18 +9,18 @@ Net::HTTP.version_1_2
 module GoogleDrive
 
     class BasicFetcher #:nodoc:
-        
+
         def initialize(proxy)
           if proxy
             @proxy = proxy
           elsif ENV["http_proxy"] && !ENV["http_proxy"].empty?
             proxy_url = URI.parse(ENV["http_proxy"])
-            @proxy = Net::HTTP.Proxy(proxy_url.host, proxy_url.port)
+            @proxy = Net::HTTP.Proxy(proxy_url.host, proxy_url.port, proxy_url.user, proxy_url.password)
           else
             @proxy = Net::HTTP
           end
         end
-        
+
         def request_raw(method, url, data, extra_header, auth)
           uri = URI.parse(url)
           http = @proxy.new(uri.host, uri.port)
@@ -38,13 +38,13 @@ module GoogleDrive
             end
           end
         end
-        
+
       private
-        
+
         def auth_header(auth)
           return {}
         end
 
     end
-    
+
 end
